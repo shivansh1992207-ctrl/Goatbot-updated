@@ -14,7 +14,7 @@
   },
   {
     "domain": ".facebook.com",
-    "expirationDate": 1793293775.676512,
+    "expirationDate": 1793296308.119563,
     "hostOnly": false,
     "httpOnly": true,
     "name": "sb",
@@ -79,7 +79,7 @@
   },
   {
     "domain": ".facebook.com",
-    "expirationDate": 1759338589,
+    "expirationDate": 1759341561,
     "hostOnly": false,
     "httpOnly": false,
     "name": "dpr",
@@ -118,7 +118,7 @@
   },
   {
     "domain": ".facebook.com",
-    "expirationDate": 1759338589,
+    "expirationDate": 1759341561,
     "hostOnly": false,
     "httpOnly": false,
     "name": "wd",
@@ -131,7 +131,7 @@
   },
   {
     "domain": ".facebook.com",
-    "expirationDate": 1790269775.675793,
+    "expirationDate": 1790272308.118235,
     "hostOnly": false,
     "httpOnly": false,
     "name": "c_user",
@@ -144,7 +144,7 @@
   },
   {
     "domain": ".facebook.com",
-    "expirationDate": 1790269775.676651,
+    "expirationDate": 1790272308.120252,
     "hostOnly": false,
     "httpOnly": true,
     "name": "xs",
@@ -153,11 +153,11 @@
     "secure": true,
     "session": false,
     "storeId": "0",
-    "value": "17%3AFSc58iQgApN3Rw%3A2%3A1758733774%3A-1%3A-1"
+    "value": "5%3AT9eXM4ojYGIehg%3A2%3A1758736306%3A-1%3A-1"
   },
   {
     "domain": ".facebook.com",
-    "expirationDate": 1766509776.10494,
+    "expirationDate": 1766512756.383227,
     "hostOnly": false,
     "httpOnly": true,
     "name": "fr",
@@ -166,18 +166,6 @@
     "secure": true,
     "session": false,
     "storeId": "0",
-    "value": "1wdtTYmuL2LOKhBxP.AWfEFTPj-_RJaFPFohU7coB7BBm63AuySGUV-2lU8xUug2QnINE.Bo1CWJ..AAA.0.0.Bo1CXQ.AWdCPT_O4MV3SbChMnYMFG_r2Ns"
-  },
-  {
-    "domain": ".facebook.com",
-    "hostOnly": false,
-    "httpOnly": false,
-    "name": "presence",
-    "path": "/",
-    "sameSite": "unspecified",
-    "secure": true,
-    "session": true,
-    "storeId": "0",
-    "value": "C%7B%22t3%22%3A%5B%5D%2C%22utc3%22%3A1758733793247%2C%22v%22%3A1%7D"
+    "value": "1UUO5pjSFJfsG5FlT.AWcWk-WHc9avds85qTr_lEd6kJrhbwXcW7fGbokuj4jLalxGSnc.Bo1C26..AAA.0.0.Bo1DF0.AWeLUJK66eL22MdhTRsCMrAaBVU"
   }
 ]
