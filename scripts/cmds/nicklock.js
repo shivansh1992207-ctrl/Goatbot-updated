@@ -1,15 +1,15 @@
 module.exports = {
   config: {
     name: "nicklock",
-    version: "1.2",
+    version: "1.4",
     author: "Anurag Mishra",
     role: 1,
-    description: "Lock or unlock nicknames of all group members (works without admin)",
+    description: "Lock or unlock nicknames of all group members (auto-revert if changed)",
     category: "box chat",
     guide: "{pn} <nickname> | {pn} off"
   },
 
-  onStart: async function ({ message, event, args, threadsData, api }) {
+  onStart: async function ({ message, event, args, threadsData }) {
     const settings = await threadsData.get(event.threadID, "settings") || {};
 
     if (!args[0]) return message.reply("⚠️ Please provide a nickname to lock, or 'off' to disable nicklock");
@@ -22,18 +22,6 @@ module.exports = {
     const lockedNick = args.join(" ");
     await threadsData.set(event.threadID, { lockedNick }, "settings");
 
-    try {
-      const threadInfo = await api.getThreadInfo(event.threadID);
-      for (const mem of threadInfo.participantIDs) {
-        if (mem !== api.getCurrentUserID()) {
-          // Bina admin check ke directly nickname change kar do
-          api.changeNickname(lockedNick, event.threadID, mem).catch(e => {});
-        }
-      }
-    } catch (err) {
-      // ignore silently
-    }
-
     return message.reply(`✅ All member nicknames locked as: ${lockedNick}`);
   },
 
@@ -42,16 +30,18 @@ module.exports = {
 
     const settings = await threadsData.get(event.threadID, "settings") || {};
     const lockedNick = settings.lockedNick;
-    if (!lockedNick) return;
+    if (!lockedNick) return; // Nicklock OFF
 
     const uid = event.logMessageData.userID;
-    if (uid === api.getCurrentUserID()) return;
+    if (uid === api.getCurrentUserID()) return; // Skip bot itself
 
-    // Bina admin ke bhi forcefully nickname revert karo
+    // Revert nickname immediately if changed
     if (event.logMessageData.nickname !== lockedNick) {
       try {
-        api.changeNickname(lockedNick, event.threadID, uid).catch(e => {});
-      } catch {}
+        await api.changeNickname(lockedNick, event.threadID, uid);
+      } catch (err) {
+        // ignore silently
+      }
     }
   }
 };
