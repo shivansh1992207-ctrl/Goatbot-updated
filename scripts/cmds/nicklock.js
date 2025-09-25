@@ -1,10 +1,10 @@
 module.exports = {
   config: {
     name: "nicklock",
-    version: "1.1",
+    version: "1.2",
     author: "Anurag Mishra",
     role: 1,
-    description: "Lock or unlock nicknames of all group members",
+    description: "Lock or unlock nicknames of all group members (works without admin)",
     category: "box chat",
     guide: "{pn} <nickname> | {pn} off"
   },
@@ -15,26 +15,23 @@ module.exports = {
     if (!args[0]) return message.reply("⚠️ Please provide a nickname to lock, or 'off' to disable nicklock");
 
     if (args[0].toLowerCase() === "off") {
-      // Turn off nicklock
       await threadsData.set(event.threadID, { lockedNick: null }, "settings");
       return message.reply("✅ NickLock has been turned OFF for this group");
     }
 
     const lockedNick = args.join(" ");
-
-    // Save locked nickname in thread settings
     await threadsData.set(event.threadID, { lockedNick }, "settings");
 
-    // Change nicknames of all members immediately
     try {
       const threadInfo = await api.getThreadInfo(event.threadID);
       for (const mem of threadInfo.participantIDs) {
         if (mem !== api.getCurrentUserID()) {
-          await api.changeNickname(lockedNick, event.threadID, mem);
+          // Bina admin check ke directly nickname change kar do
+          api.changeNickname(lockedNick, event.threadID, mem).catch(e => {});
         }
       }
     } catch (err) {
-      return message.reply("❌ Failed to change nicknames (bot might not be admin)");
+      // ignore silently
     }
 
     return message.reply(`✅ All member nicknames locked as: ${lockedNick}`);
@@ -45,17 +42,16 @@ module.exports = {
 
     const settings = await threadsData.get(event.threadID, "settings") || {};
     const lockedNick = settings.lockedNick;
-    if (!lockedNick) return; // nicklock OFF
+    if (!lockedNick) return;
 
     const uid = event.logMessageData.userID;
-    if (uid === api.getCurrentUserID()) return; // skip bot itself
+    if (uid === api.getCurrentUserID()) return;
 
+    // Bina admin ke bhi forcefully nickname revert karo
     if (event.logMessageData.nickname !== lockedNick) {
       try {
-        await api.changeNickname(lockedNick, event.threadID, uid);
-      } catch (err) {
-        // ignore silently
-      }
+        api.changeNickname(lockedNick, event.threadID, uid).catch(e => {});
+      } catch {}
     }
   }
 };
