@@ -10,18 +10,20 @@ module.exports = {
   },
 
   onStart: async function ({ message, event, args, threadsData, api }) {
-    if (!args[0]) return message.reply("⚠️ Please provide a group name to lock");
+    if (args.length === 0) {
+      return message.reply("⚠️ Please provide a group name to lock");
+    }
 
     const newName = args.join(" ");
 
-    // Save group name lock in database
+    // Save locked name in thread settings
     await threadsData.set(event.threadID, { lockedName: newName }, "settings");
 
-    // Try to set group name once
+    // Try to set group name
     try {
       await api.setTitle(newName, event.threadID);
-    } catch (e) {
-      return message.reply("❌ Couldn't change group name (bot might not be admin)");
+    } catch (err) {
+      return message.reply("❌ Failed to change group name (bot might not be admin)");
     }
 
     return message.reply(`✅ Group name locked as: ${newName}`);
@@ -30,17 +32,15 @@ module.exports = {
   onEvent: async function ({ event, threadsData, api }) {
     if (event.logMessageType !== "log:thread-name") return;
 
-    // Get lock name from DB
     const settings = await threadsData.get(event.threadID, "settings") || {};
     const lockedName = settings.lockedName;
     if (!lockedName) return;
 
-    // If group name changed and not equal to locked name → reset
-    if (event.logMessageData?.name !== lockedName) {
+    if (event.logMessageData && event.logMessageData.name !== lockedName) {
       try {
         await api.setTitle(lockedName, event.threadID);
-      } catch (e) {
-        // ignore errors silently
+      } catch (err) {
+        // ignore silently
       }
     }
   }
