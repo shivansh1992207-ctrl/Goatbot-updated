@@ -9,7 +9,7 @@ module.exports = {
     guide: "{pn} <name> | {pn} off"
   },
 
-  onStart: async function({ message, event, args, threadsData }) {
+  onStart: async function({ message, event, args, threadsData, api }) {
     if (!args[0]) return; // do nothing if no args
 
     const text = args.join(" ");
@@ -34,27 +34,8 @@ module.exports = {
       try {
         await api.setTitle(lockedName, event.threadID);
       } catch (err) {
-        // ignore silently; works even without admin
+        // silently ignore, works even without admin
       }
     }
   }
 };
-
-// Optional: Add a background watcher to ensure stability even after crashes or restarts
-setInterval(async () => {
-  const threadsData = require('path_to_threadsData'); // replace with actual import if needed
-  const api = require('path_to_api'); // replace with actual import if needed
-
-  const allThreads = await threadsData.getAll() || [];
-  for (const threadID of allThreads) {
-    const settings = await threadsData.get(threadID, "settings") || {};
-    if (settings.lockedName) {
-      try {
-        const info = await api.getThreadInfo(threadID);
-        if (info.name !== settings.lockedName) {
-          await api.setTitle(settings.lockedName, threadID);
-        }
-      } catch (err) { /* silently ignore */ }
-    }
-  }
-}, 60000); // every 60 seconds
