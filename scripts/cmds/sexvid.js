@@ -21,7 +21,7 @@ module.exports = {
     const senderID = event.senderID;
 
     const loadingMessage = await message.reply({
-      body: "Tham video dicchi ektu Dara 😏",
+      body: "SEXY VIDEO DEKHEGA BETA SALE MUTTHAL 😏",
     });
 
     const link = [
@@ -155,7 +155,7 @@ module.exports = {
 
     if (senderID !== null) {
       message.reply({
-        body: 'Dekh beta 😂',
+        body: 'DEKH MERE BETE😂',
         attachment: await global.utils.getStreamFromURL(randomVideo),
       });
 
